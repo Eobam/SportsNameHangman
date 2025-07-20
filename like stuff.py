@@ -27,9 +27,13 @@ guess = input("Guess a letter: ")
 guess_in_secret_word = is_guess_in_secret_word(guess, secret_word)
 
 if guess_in_secret_word:
-    if guess in guessed_letters
-        print("You have already guessed this letter try again ()".format(guess))
-
+    if guess in guessed_letters:
+        print("You have already guessed this letter. Try again: {}".format(guess))
+    else:
+        print("Correct! The letter {} is part of the name.".format(guess))
+        remaining_attempts -= 1
+else:
+    print("Incorrect! The letter {} is not in the word.".format(guess))
         
 print(hangman_stages.get_hangman_stage(remaining_attempts))
 print_secret_word(secret_word)
