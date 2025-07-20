@@ -3,8 +3,8 @@ import random
 def select_word(words):
     return random.choice(words)
 
-def print_secret_word(secret_word):
-    print(" _ " len(secret_word))
+def print_secret_word(secret_word): 
+    print(" _ ") (len(secret_word))
 
 words = ("barzal", "Lee", "Sinner", "Varlomov", "Mahomes")
 remaining_attempts = 6
