@@ -1,4 +1,4 @@
-import random
+import random, hangman_stages
 
 def select_word(words):
     return random.choice(words)
@@ -13,4 +13,5 @@ guessed_letters = ""
 print("Welcome to SportsPlayerNameHangman!")
 
 secret_word = select_word(words)
+print(hangman_stages.get_hangman_stage(remaining_attempts))
 print_secret_word(secret_word)
