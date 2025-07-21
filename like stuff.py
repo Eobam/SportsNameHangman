@@ -47,4 +47,6 @@ while remaining_attempts > 0 and len(guessed_letters) < len(get_unique_letters(s
     remaining_attempts -= 1
         
     print(hangman_stages.get_hangman_stage(remaining_attempts))
+    print("\n{} attempts remaining\n".format(remaining_attempts))
     print_secret_word(secret_word, guessed_letters)
+    print("\n\Number of letters guessed: {}\n".format(remaining_attempts))
