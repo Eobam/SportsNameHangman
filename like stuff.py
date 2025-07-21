@@ -3,7 +3,13 @@ import random, hangman_stages, sys
 def select_word(words):
     return random.choice(words)
 
-def print_secret_word(secret_word):
+def print_secret_word(secret_word, guessed_letters):
+    for letter in secret_word:
+        if letter in guessed_letters:
+            print(" {} ".format(letter), ends="")
+        else:
+            print(" _ ", ends="")
+    print("/n")
     print(" _ " * len(secret_word))
 
 def is_guess_in_secret_word(guess, secret_word):
@@ -31,9 +37,10 @@ if guess_in_secret_word:
         print("You have already guessed this letter. Try again: {}".format(guess))
     else:
         print("Correct! The letter {} is part of the name.".format(guess))
-        remaining_attempts -= 1
+        guessed_letters += guess
 else:
     print("Incorrect! The letter {} is not in the word.".format(guess))
+    remaining_attempts -= 1
         
 print(hangman_stages.get_hangman_stage(remaining_attempts))
-print_secret_word(secret_word)
+print_secret_word(secret_word, guessed_letters)
