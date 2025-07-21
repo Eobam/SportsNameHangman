@@ -47,3 +47,8 @@ while remaining_attempts > 0 and len(set(guessed_letters) & set(secret_word)) < 
     print("\n{} attempts remaining\n".format(remaining_attempts))
     print_secret_word(secret_word, guessed_letters)
     print("\nLetters guessed so far: {}\n".format(guessed_letters))
+
+if len(guessed_letters) == len(get_unique_letters(secret_word)):
+    print("+++ You lost... +++\n")
+else:
+    print("+++ You won! +++\n")
