@@ -1,4 +1,4 @@
-import random, hangman_stages, sys
+import random, hangman_stages, sys, Listofplayers
 import pygame
 
 pygame.init()
