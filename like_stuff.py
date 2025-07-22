@@ -1,4 +1,5 @@
 import random, hangman_stages, sys
+import pygame
 
 def select_word(words):
     return random.choice(words)
