@@ -1,6 +1,38 @@
 import random, hangman_stages, sys, Listofplayers
 import pygame
 
+NHL: list[str] = ["Aho", "Andersen", "Andersson", "Arvidsson", "Atkinson",
+    "Bäckström", "Barzal", "Bedard", "Bennett", "Benn", "Bergeron", "Binnington",
+    "Boeser", "Bouchard", "Brayden", "Brodeur", "Burns", "Byram", "Caldwell",
+    "Carlson", "Carrick", "Caufield", "Chabot", "Chara", "Cirelli", "Clutterbuck",
+    "Coleman", "Connor", "Copp", "Couturier", "Crosby", "Dahlin", "DeBrincat",
+    "Demko", "Draisaitl", "Duchene", "Dumba", "Eichel", "Ekblad", "Eriksson Ek",
+    "Esa", "Fabri", "Faksa", "Fantilli", "Fleury", "Foligno", "Fox", "Frederic",
+    "Gallagher", "Gaudreau", "Georgiev", "Girard", "Giroux", "Gostisbehere",
+    "Gourde", "Graves", "Grzelcyk", "Gudas", "Hall", "Hamilton",
+    "Harding", "Harley", "Hedman", "Heiskanen", "Henrique", "Hintz", "Holmstrom",
+    "Horvat", "Hughes", "Hyman", "Iafallo", "Ingram", "Jarry", "Jarvis",
+    "Jeannot", "Jenner", "Jiricek", "Johnson", "Johnston", "Jones", "Joseph",
+    "Josi", "Kadri", "Kane", "Karlsson", "Kempe", "Killorn", "Kiviranta",
+    "Klingberg", "Knies", "Kopitar", "Krejci", "Kucherov", "Kuznetsov", "Lafrenière",
+    "Landeskog", "Larkin", "Lee", "Lehkonen", "Letang", "Lindell", "Lindholm",
+    "Lizotte", "Lundell", "Mackinnon", "Makar", "Malgin", "Malkin", "Mantha",
+    "Marchand", "Marchessault", "Marino", "Markstrom", "Marner", "Martinook",
+    "Matthews", "McAvoy", "McCann", "McDavid", "McDonagh", "McTavish", "Meier",
+    "Mercer", "Merzlikins", "Middleton", "Mikheyev", "Miller", "Monahan",
+    "Mrazek", "Murphy", "Necas", "Nedeljkovic", "Nelson", "Newhook", "Novak",
+    "Nugent-Hopkins", "Nylander", "O'Connor", "O'Reilly", "Oettinger", "Orlov",
+    "Ovechkin", "Palmieri", "Panarin", "Pastrnak", "Pelech", "Pettersson",
+    "Pietrangelo", "Point", "Provorov", "Puljujarvi", "Quick", "Rakell",
+    "Rantanen", "Raymond", "Reichel", "Reimer", "Reinhart", "Robertson",
+    "Rodrigues", "Romanov", "Roslovic", "Rust", "Saros", "Scheifele", "Schmidt",
+    "Seguin", "Severson", "Shesterkin", "Sillinger", "Skjei", "Slavin", "Smith",
+    "Soucy", "Staal", "Stamkos", "Stankoven", "Stolarz", "Strome", "Svechnikov",
+    "Swayman", "Suzuki", "Terry", "Tavares", "Tkachuk", "Toews", "Tomasino",
+    "Trocheck", "Tsygankov", "Tuch", "Vasilevskiy", "Vatrano", "Verhaeghe",
+    "Vlasic", "Voracek", "Walman", "Weber", "Weegar", "Wilson", "Wood",
+    "Wotherspoon", "Wright", "York", "Zacha", "Zegras"]
+
 pygame.init()
 
 WIDTH, HEIGHT = 800, 600
@@ -28,9 +60,11 @@ def is_guess_in_secret_word(guess, secret_word):
 def get_unique_letters(word):
     return "".join(set(word))
 
-words = ("barzal", "lee", "sinner", "varlomov", "mahomes")
+words: list[str] = ["barzal", "lee", "sinner", "varlomov", "mahomes"]
 remaining_attempts = 6
 guessed_letters = ""
+
+words.extend(NHL)
 
 print("Welcome to SportsPlayerNameHangman!")
 secret_word = select_word(words)
