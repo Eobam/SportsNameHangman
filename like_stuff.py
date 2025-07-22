@@ -1,7 +1,34 @@
 import random, hangman_stages, sys, Listofplayers
 import pygame
 
-NHL: list[str] = ["Aho", "Andersen", "Andersson", "Arvidsson", "Atkinson",
+pygame.init()
+
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Sports Name Hangman")
+
+def select_word(words):
+    return random.choice(words)
+
+def print_secret_word(secret_word, guessed_letters):
+    for letter in secret_word:
+        if letter in guessed_letters:
+            print(" {} ".format(letter), end="")
+        else:
+            print(" _ ", end="")
+    print("\n")
+    print(" _ " * len(secret_word))
+
+def is_guess_in_secret_word(guess, secret_word):
+    if len(guess) > 1 or not guess.isalpha():
+        print("Only single letters are allowed. Unable to continue.")
+        sys.exit()
+    return guess in secret_word
+
+def get_unique_letters(word):
+    return "".join(set(word))
+
+words = ("barzal", "lee", "sinner", "varlomov", "mahomes", "Aho", "Andersen", "Andersson", "Arvidsson", "Atkinson",
     "Bäckström", "Barzal", "Bedard", "Bennett", "Benn", "Bergeron", "Binnington",
     "Boeser", "Bouchard", "Brayden", "Brodeur", "Burns", "Byram", "Caldwell",
     "Carlson", "Carrick", "Caufield", "Chabot", "Chara", "Cirelli", "Clutterbuck",
@@ -31,40 +58,9 @@ NHL: list[str] = ["Aho", "Andersen", "Andersson", "Arvidsson", "Atkinson",
     "Swayman", "Suzuki", "Terry", "Tavares", "Tkachuk", "Toews", "Tomasino",
     "Trocheck", "Tsygankov", "Tuch", "Vasilevskiy", "Vatrano", "Verhaeghe",
     "Vlasic", "Voracek", "Walman", "Weber", "Weegar", "Wilson", "Wood",
-    "Wotherspoon", "Wright", "York", "Zacha", "Zegras"]
-
-pygame.init()
-
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sports Name Hangman")
-
-def select_word(words):
-    return random.choice(words)
-
-def print_secret_word(secret_word, guessed_letters):
-    for letter in secret_word:
-        if letter in guessed_letters:
-            print(" {} ".format(letter), end="")
-        else:
-            print(" _ ", end="")
-    print("\n")
-    print(" _ " * len(secret_word))
-
-def is_guess_in_secret_word(guess, secret_word):
-    if len(guess) > 1 or not guess.isalpha():
-        print("Only single letters are allowed. Unable to continue.")
-        sys.exit()
-    return guess in secret_word
-
-def get_unique_letters(word):
-    return "".join(set(word))
-
-words: list[str] = ["barzal", "lee", "sinner", "varlomov", "mahomes"]
+    "Wotherspoon", "Wright", "York", "Zacha", "Zegras")
 remaining_attempts = 6
 guessed_letters = ""
-
-words.extend(NHL)
 
 print("Welcome to SportsPlayerNameHangman!")
 secret_word = select_word(words)
