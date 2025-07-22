@@ -12,7 +12,7 @@ hangman_stage_images = [
     pygame.image.load("hangmanarm1.png"),
     pygame.image.load("hangmanarm2.png"),
     pygame.image.load("hangmanblank.png"),
-    pygame.image.load("hangmanbodypng"),
+    pygame.image.load("hangmanbody.png"),
     pygame.image.load("hangmanhead.png"),
     pygame.image.load("hangmanleg1.png"),
     pygame.image.load("hangmanleg2.png"),]
