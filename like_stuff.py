@@ -8,6 +8,15 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sports Name Hangman")
 
 
+hangman_stage_images = [
+    pygame.image.load("hangmanarm1.png"),
+    pygame.image.load("hangmanarm2.png"),
+    pygame.image.load("hangmanblank.png"),
+    pygame.image.load("hangman3bodypng"),
+    pygame.image.load("hangmanhead.png"),
+    pygame.image.load("hangmanleg1.png"),
+    pygame.image.load("hangmanleg2.png"),]
+
 def select_word(words):
     return random.choice(words)
 
@@ -65,6 +74,9 @@ guessed_letters = ""
 
 print("Welcome to SportsPlayerNameHangman!")
 secret_word = select_word(words)
+
+def draw_hangman(remaining_attempts):
+    screen.blit(hangman_stage_images[6 - remaining_attempts], (100, 100))
 
 while remaining_attempts > 0 and len(set(guessed_letters) & set(secret_word)) < len(set(secret_word)):
     guess = input("Guess a letter: ").lower()
