@@ -50,6 +50,6 @@ while remaining_attempts > 0 and len(set(guessed_letters) & set(secret_word)) < 
     print("\nLetters guessed so far: {}\n".format(guessed_letters))
 
 if len(guessed_letters) == len(get_unique_letters(secret_word)):
-    print("+++ You lost... +++\n")
-else:
     print("+++ You won! +++\n")
+else:
+    print("+++ You lost... +++\n")
