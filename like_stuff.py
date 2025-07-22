@@ -9,13 +9,13 @@ pygame.display.set_caption("Sports Name Hangman")
 
 
 hangman_stage_images = [
-    pygame.image.load("images/hangmanarm1.png"),
-    pygame.image.load("images/hangmanarm2.png"),
-    pygame.image.load("images/hangmanblank.png"),
-    pygame.image.load("images/hangman3bodypng"),
-    pygame.image.load("images/hangmanhead.png"),
-    pygame.image.load("images/hangmanleg1.png"),
-    pygame.image.load("images/hangmanleg2.png"),]
+    pygame.image.load("hangmanarm1.png"),
+    pygame.image.load("hangmanarm2.png"),
+    pygame.image.load("hangmanblank.png"),
+    pygame.image.load("hangman3bodypng"),
+    pygame.image.load("hangmanhead.png"),
+    pygame.image.load("hangmanleg1.png"),
+    pygame.image.load("hangmanleg2.png"),]
 
 def select_word(words):
     return random.choice(words)
