@@ -1,25 +1,32 @@
-import random, sys, pygame
+import pygame
+import random
+import sys
 
+# --- Setup ---
 pygame.init()
-
-screen_width, screen_height = 800, 600
-screen = pygame.display.set_mode((screen_width, screen_height))
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sports Name Hangman")
-font = pygame.font.SysFont('arial', 38)
+FONT = pygame.font.SysFont("arial", 36)
+clock = pygame.time.Clock()
+
+def load_img(path, size=(300, 300)):
+    image = pygame.image.load(path)
+    return pygame.transform.scale(image, size)
+
 
 hangman_images = [
-    pygame.image.load("hangmanblank.png"),   
-    pygame.image.load("hangmanhead.png"),   
-    pygame.image.load("hangmanbody.png"),    
-    pygame.image.load("hangmanarm1.png"),    
-    pygame.image.load("hangmanarm2.png"),    
-    pygame.image.load("hangmanleg1.png"),    
-    pygame.image.load("hangmanleg2.png"),    
-
-stage = 6 - remaining_attempts
-screen.blit(hangman_images[stage], (100, 100))
+    load_img("hangmanblank.png"),
+    load_img("hangmanhead.png"),
+    load_img("hangmanbody.png"),
+    load_img("hangmanarm1.png"),
+    load_img("hangmanarm2.png"),
+    load_img("hangmanleg1.png"),
+    load_img("hangmanleg2.png"),
+]
 
 
+# --- Game Setup ---
 words = ("barzal", "lee", "sinner", "varlomov", "mahomes", "Aho", "Andersen", "Andersson", "Arvidsson", "Atkinson",
     "Bäckström", "Barzal", "Bedard", "Bennett", "Benn", "Bergeron", "Binnington",
     "Boeser", "Bouchard", "Brayden", "Brodeur", "Burns", "Byram", "Caldwell",
@@ -52,107 +59,61 @@ words = ("barzal", "lee", "sinner", "varlomov", "mahomes", "Aho", "Andersen", "A
     "Vlasic", "Voracek", "Walman", "Weber", "Weegar", "Wilson", "Wood",
     "Wotherspoon", "Wright", "York", "Zacha", "Zegras")
 secret_word = random.choice(words).lower()
-guessed_letters = ""
+guessed_letters = []
 remaining_attempts = 6
-iput_letter = ''
+current_guess = ''
 game_over = False
+win = False
 
+# --- Draw Function ---
 def draw_game():
     screen.fill((0, 0, 0))
 
-    
+    # Draw hangman image
     stage = 6 - remaining_attempts
-    screen.blit(hangman_images[stage], (100, 100))
+    screen.blit(hangman_images[stage], (50, 50))
 
-    
-    display_word = ' '.join([letter if letter in guessed_letters else "_" for letter in secret_word])
-    text_surface = font.render(display_word, True, (255, 255, 255))
-    screen.blit(text_surface, (100, 400))
+    # Word with underscores
+    display_word = ' '.join([l if l in guessed_letters else '_' for l in secret_word])
+    word_surface = FONT.render(display_word, True, (255, 255, 255))
+    screen.blit(word_surface, (400, 200))
 
-    
-    guessed_text = font.render("Guessed: " + ', '.join(guessed_letters), True, (200, 200, 200))
-    screen.blit(guessed_text, (100, 450))
+    # Guessed letters
+    guessed_text = FONT.render("Guessed: " + ', '.join(sorted(guessed_letters)), True, (180, 180, 180))
+    screen.blit(guessed_text, (400, 260))
 
-    
-    input_text = font.render("Type a letter: " + input_letter, True, (255, 255, 100))
-    screen.blit(input_text, (100, 500))
+    # Current key input
+    input_surface = FONT.render("Type a letter...", True, (255, 255, 100))
+    screen.blit(input_surface, (400, 320))
+
+    # Outcome
+    if game_over:
+        outcome = "You WON!" if win else f"You LOST! Word was: {secret_word}"
+        result_text = FONT.render(outcome, True, (0, 255, 0) if win else (255, 0, 0))
+        screen.blit(result_text, (400, 400))
 
     pygame.display.flip()
 
-    while not game_over:
-        draw_game()
+# --- Game Loop ---
+while True:
+    draw_game()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-        
-        elif event.type == pygame.KEYDOWN:
-            if event.unicode.isalpha():
-                input_letter = event.unicode.lower()
-                if input_letter not in guessed_letters:
-                    guessed_letters.append(input_letter)
-                    if input_letter not in secret_word:
-                        remaining_attempts -= 1
-                input_letter = ''  
-                
-def print_secret_word(secret_word, guessed_letters):
-    for letter in secret_word:
-        if letter in guessed_letters:
-            print(" {} ".format(letter), end="")
-        else:
-            print(" _ ", end="")
-    print("\n")
+        if not game_over and event.type == pygame.KEYDOWN:
+            key = event.unicode.lower()
+            if key.isalpha() and key not in guessed_letters:
+                guessed_letters.append(key)
+                if key not in secret_word:
+                    remaining_attempts -= 1
 
-def is_guess_in_secret_word(guess, secret_word):
-    if len(guess) > 1 or not guess.isalpha():
-        print("Only single letters are allowed.")
-        return False
-    return guess in secret_word
+                if all(letter in guessed_letters for letter in secret_word):
+                    game_over = True
+                    win = True
 
-def draw_hangman(stage):
-    screen.fill((0, 0, 0))
-    index = 6 - stage
-    if 0 <= index < len(hangman_images):
-        screen.blit(hangman_images[index], (100, 100))
-    pygame.display.update()
+                if remaining_attempts <= 0:
+                    game_over = True
 
-print("Welcome to SportsPlayerNameHangman!")
-draw_hangman(remaining_attempts)
-print_secret_word(secret_word, guessed_letters)
-
-running = True
-while running and remaining_attempts > 0:
-    
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    guess = input("Guess a letter: ").lower()
-
-    if guess in guessed_letters:
-        print("Already guessed:", guess)
-        continue
-
-    guessed_letters += guess
-
-    if is_guess_in_secret_word(guess, secret_word):
-        print("Correct!")
-    else:
-        print("Incorrect!")
-        remaining_attempts -= 1
-
-    draw_hangman(remaining_attempts)
-    print_secret_word(secret_word, guessed_letters)
-
-    
-    if all(letter in guessed_letters for letter in secret_word):
-        print("+++ You won! +++")
-        running = False
-
-if remaining_attempts == 0:
-    print("+++ You lost... +++")
-    print("The word was:", secret_word)
-
-pygame.quit()
+    clock.tick(30)
