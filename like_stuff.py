@@ -1,57 +1,24 @@
-import random, hangman_stages, sys
-import pygame
+import random, sys, pygame
 
 pygame.init()
 
 screen_width, screen_height = 800, 600
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Hangman Image Test")
-
-
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sports Name Hangman")
+font = pygame.font.SysFont('arial', 38)
 
+hangman_images = [
+    pygame.image.load("hangmanblank.png"),   
+    pygame.image.load("hangmanhead.png"),   
+    pygame.image.load("hangmanbody.png"),    
+    pygame.image.load("hangmanarm1.png"),    
+    pygame.image.load("hangmanarm2.png"),    
+    pygame.image.load("hangmanleg1.png"),    
+    pygame.image.load("hangmanleg2.png"),    
 
-hangman_stage_images = [
-    pygame.image.load("hangmanarm1.png"),
-    pygame.image.load("hangmanarm2.png"),
-    pygame.image.load("hangmanblank.png"),
-    pygame.image.load("hangmanbody.png"),
-    pygame.image.load("hangmanhead.png"),
-    pygame.image.load("hangmanleg1.png"),
-    pygame.image.load("hangmanleg2.png"),]
+stage = 6 - remaining_attempts
+screen.blit(hangman_images[stage], (100, 100))
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-screen.blit(image, (100, 100))  # Draw at (x=100, y=100)
-pygame.display.update()
-    
-pygame.display.update()
-def select_word(words):
-    return random.choice(words)
-
-def print_secret_word(secret_word, guessed_letters):
-    for letter in secret_word:
-        if letter in guessed_letters:
-            print(" {} ".format(letter), end="")
-        else:
-            print(" _ ", end="")
-    print("\n")
-    print(" _ " * len(secret_word))
-
-def is_guess_in_secret_word(guess, secret_word):
-    if len(guess) > 1 or not guess.isalpha():
-        print("Only single letters are allowed. Unable to continue.")
-        sys.exit()
-    return guess in secret_word
-
-def get_unique_letters(word):
-    return "".join(set(word))
 
 words = ("barzal", "lee", "sinner", "varlomov", "mahomes", "Aho", "Andersen", "Andersson", "Arvidsson", "Atkinson",
     "Bäckström", "Barzal", "Bedard", "Bennett", "Benn", "Bergeron", "Binnington",
@@ -84,36 +51,108 @@ words = ("barzal", "lee", "sinner", "varlomov", "mahomes", "Aho", "Andersen", "A
     "Trocheck", "Tsygankov", "Tuch", "Vasilevskiy", "Vatrano", "Verhaeghe",
     "Vlasic", "Voracek", "Walman", "Weber", "Weegar", "Wilson", "Wood",
     "Wotherspoon", "Wright", "York", "Zacha", "Zegras")
-remaining_attempts = 6
+secret_word = random.choice(words).lower()
 guessed_letters = ""
+remaining_attempts = 6
+iput_letter = ''
+game_over = False
+
+def draw_game():
+    screen.fill((0, 0, 0))
+
+    
+    stage = 6 - remaining_attempts
+    screen.blit(hangman_images[stage], (100, 100))
+
+    
+    display_word = ' '.join([letter if letter in guessed_letters else "_" for letter in secret_word])
+    text_surface = font.render(display_word, True, (255, 255, 255))
+    screen.blit(text_surface, (100, 400))
+
+    
+    guessed_text = font.render("Guessed: " + ', '.join(guessed_letters), True, (200, 200, 200))
+    screen.blit(guessed_text, (100, 450))
+
+    
+    input_text = font.render("Type a letter: " + input_letter, True, (255, 255, 100))
+    screen.blit(input_text, (100, 500))
+
+    pygame.display.flip()
+
+    while not game_over:
+        draw_game()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        
+        elif event.type == pygame.KEYDOWN:
+            if event.unicode.isalpha():
+                input_letter = event.unicode.lower()
+                if input_letter not in guessed_letters:
+                    guessed_letters.append(input_letter)
+                    if input_letter not in secret_word:
+                        remaining_attempts -= 1
+                input_letter = ''  
+                
+def print_secret_word(secret_word, guessed_letters):
+    for letter in secret_word:
+        if letter in guessed_letters:
+            print(" {} ".format(letter), end="")
+        else:
+            print(" _ ", end="")
+    print("\n")
+
+def is_guess_in_secret_word(guess, secret_word):
+    if len(guess) > 1 or not guess.isalpha():
+        print("Only single letters are allowed.")
+        return False
+    return guess in secret_word
+
+def draw_hangman(stage):
+    screen.fill((0, 0, 0))
+    index = 6 - stage
+    if 0 <= index < len(hangman_images):
+        screen.blit(hangman_images[index], (100, 100))
+    pygame.display.update()
 
 print("Welcome to SportsPlayerNameHangman!")
-secret_word = select_word(words)
+draw_hangman(remaining_attempts)
+print_secret_word(secret_word, guessed_letters)
 
-def draw_hangman(remaining_attempts):
-    screen.blit(hangman_stage_images[6 - remaining_attempts], (100, 100))
-    pygame.display.update()
-while remaining_attempts > 0 and len(set(guessed_letters) & set(secret_word)) < len(set(secret_word)):
+running = True
+while running and remaining_attempts > 0:
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
     guess = input("Guess a letter: ").lower()
 
     if guess in guessed_letters:
-        print("You have already guessed this letter. Try again: {}".format(guess))
+        print("Already guessed:", guess)
         continue
-
-    if is_guess_in_secret_word(guess, secret_word):
-        print("Correct! The letter {} is part of the name.".format(guess))
-    else:
-        print("Incorrect! The letter {} is not in the word.".format(guess))
-        remaining_attempts -= 1
 
     guessed_letters += guess
 
-    draw_hangman(remaining_attempts)
-    print("\n{} attempts remaining\n".format(remaining_attempts))
-    print_secret_word(secret_word, guessed_letters)
-    print("\nLetters guessed so far: {}\n".format(guessed_letters))
+    if is_guess_in_secret_word(guess, secret_word):
+        print("Correct!")
+    else:
+        print("Incorrect!")
+        remaining_attempts -= 1
 
-if len(guessed_letters) == len(get_unique_letters(secret_word)):
-    print("+++ You won! +++\n")
-else:
-    print("+++ You lost... +++\n")
+    draw_hangman(remaining_attempts)
+    print_secret_word(secret_word, guessed_letters)
+
+    
+    if all(letter in guessed_letters for letter in secret_word):
+        print("+++ You won! +++")
+        running = False
+
+if remaining_attempts == 0:
+    print("+++ You lost... +++")
+    print("The word was:", secret_word)
+
+pygame.quit()
