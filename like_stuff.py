@@ -17,6 +17,16 @@ hangman_stage_images = [
     pygame.image.load("hangmanleg1.png"),
     pygame.image.load("hangmanleg2.png"),]
 
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+screen.blit(image, (100, 100))  # Draw at (x=100, y=100)
+pygame.display.update()
+    
+pygame.display.update()
 def select_word(words):
     return random.choice(words)
 
@@ -77,7 +87,7 @@ secret_word = select_word(words)
 
 def draw_hangman(remaining_attempts):
     screen.blit(hangman_stage_images[6 - remaining_attempts], (100, 100))
-
+    pygame.display.update()
 while remaining_attempts > 0 and len(set(guessed_letters) & set(secret_word)) < len(set(secret_word)):
     guess = input("Guess a letter: ").lower()
 
