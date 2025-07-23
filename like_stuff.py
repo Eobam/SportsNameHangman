@@ -30,13 +30,22 @@ def get_wikipedia_summary(last_name):
         language="en",
         user_agent=headers["User-Agent"]
     )
+
     full_name = full_name_lookup.get(last_name, last_name.title())
+    print(f"[DEBUG] Looking up Wikipedia summary for: {full_name}")
+
     page = wiki.page(full_name)
 
-    if page.exists():
+    if page.exists() and page.summary.strip():
         return page.summary[:400]
-    else:
-        return "No summary found on Wikipedia."
+    
+    # Fallback: Try last name as page title
+    fallback_page = wiki.page(last_name.title())
+    if fallback_page.exists() and fallback_page.summary.strip():
+        return "[Fallback] " + fallback_page.summary[:400]
+
+    return "No summary found on Wikipedia."
+
 
 
 hangman_images = [
