@@ -7,8 +7,20 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sports Name Hangman")
-FONT = pygame.font.SysFont("arial", 36)
+FONT = pygame.font.Font("DMSans-Variable.ttf", 36)
+SMALL_FONT = pygame.font.Font("DMSans-Variable.ttf", 24)
 clock = pygame.time.Clock()
+
+
+def load_img(path, size=(300, 300)):
+    try:
+        image = pygame.image.load(path)
+        return pygame.transform.scale(image, size)
+    except pygame.error:
+        print(f"[ERROR] Couldn't load image: {path}")
+        return pygame.Surface(size)
+
+background = load_img("background1.jpg", size=(WIDTH, HEIGHT))
 
 def load_img(path, size=(300, 300)):
     try:
@@ -33,8 +45,6 @@ def get_wikipedia_summary(secret_word):
 
     key = secret_word.strip().lower()
     full_name = full_name_lookup.get(key, key.title())
-
-    print(f"[DEBUG] Looking up Wikipedia page for: '{full_name}'")
 
     page = wiki.page(full_name)
     if page.exists() and page.summary.strip():
@@ -297,20 +307,19 @@ def reset_game():
     game_over = False
     win = False
     wikipedia_summary = ""
-    print(f"[DEBUG] New secret word: {secret_word}")
 
 reset_game()
 
 def draw_button(text, x, y, width, height, color, text_color):
-    pygame.draw.rect(screen, color, (x, y, width, height))
-    font = pygame.font.SysFont(None, 40)
-    label = font.render(text, True, text_color)
+    pygame.draw.rect(screen, color, (x, y, width, height), border_radius=10)
+    label = SMALL_FONT.render(text, True, text_color)
     label_rect = label.get_rect(center=(x + width // 2, y + height // 2))
     screen.blit(label, label_rect)
     return pygame.Rect(x, y, width, height)
 
+
 def draw_game():
-    screen.fill((0, 0, 0))
+    screen.blit(background, (0, 0))
 
     stage = 6 - remaining_attempts
     screen.blit(hangman_images[stage], (50, 50))
